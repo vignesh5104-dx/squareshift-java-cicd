@@ -1,16 +1,10 @@
-resource "kubernetes_namespace" "app_ns" {
-  metadata {
-    name = var.namespace
-    create_namespace = true
-  }
-}
-
 resource "helm_release" "springboot_app" {
   name       = "springboot-app"
-  namespace  = kubernetes_namespace.app_ns.metadata[0].name
+  namespace  = var.namespace
+  create_namespace = true
+
   chart      = "../helm"
   version    = "0.1.0"
-  create_namespace = false
 
   set {
     name  = "image.repository"
@@ -32,4 +26,3 @@ resource "helm_release" "springboot_app" {
     value = "true"
   }
 }
-
