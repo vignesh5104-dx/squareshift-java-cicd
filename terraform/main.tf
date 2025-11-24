@@ -1,6 +1,7 @@
 resource "kubernetes_namespace" "app_ns" {
   metadata {
     name = var.namespace
+    create_namespace = true
   }
 }
 
