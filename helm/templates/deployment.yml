@@ -1,19 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "springboot-app.fullname" . }}
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
   labels:
-    app: {{ include "springboot-app.name" . }}
-    chart: {{ include "springboot-app.chart" . }}
+    app: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "springboot-app.name" . }}
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "springboot-app.name" . }}
+        app: {{ .Chart.Name }}
         {{- if .Values.metrics.enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.metrics.port }}"
@@ -21,12 +20,11 @@ spec:
         {{- end }}
     spec:
       containers:
-        - name: {{ include "springboot-app.name" . }}
+        - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8080
-              name: http
           env:
             {{- range .Values.env }}
             - name: {{ .name }}

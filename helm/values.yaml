@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: your-docker-username/springboot-app
+  repository: gl2029/springboot-app
   tag: "latest"
   pullPolicy: IfNotPresent
 
@@ -9,16 +9,6 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8080
-
-ingress:
-  enabled: false
-  className: ""
-  hosts:
-    - host: springboot.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []   # configure if you want local TLS
 
 resources:
   requests:
@@ -52,7 +42,6 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
-# Basic observability (Prometheus scraping annotations via pod labels)
 metrics:
   enabled: true
   path: /actuator/prometheus

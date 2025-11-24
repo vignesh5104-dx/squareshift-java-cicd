@@ -1,6 +1,6 @@
 apiVersion: v2
 name: springboot-app
-description: Spring Boot application chart for Rancher Desktop
+description: Spring Boot application Helm chart without includes
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
