@@ -6,6 +6,10 @@ resource "helm_release" "springboot_app" {
   chart      = "../helm"
   version    = "0.1.0"
 
+  force_update = true     # <---- important
+  cleanup_on_fail = true  # <---- auto fixes failed states
+  atomic = true           # <---- safe upgrades
+
   set {
     name  = "image.repository"
     value = var.image_repository
