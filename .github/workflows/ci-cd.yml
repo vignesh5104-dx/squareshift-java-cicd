@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_REPO: your-docker-username/springboot-app
+  IMAGE_REPO: ${{ secrets.DOCKER_HUB_TOKEN }}/springboot-app
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
     needs: build-test
 
     env:
-      IMAGE_REPO: your-docker-username/springboot-app
+      IMAGE_REPO: ${{ secrets.DOCKER_HUB_TOKEN }}/springboot-app
       IMAGE_TAG: ${{ github.sha }}
       KUBECONFIG_PATH: ~/.kube/config
 
