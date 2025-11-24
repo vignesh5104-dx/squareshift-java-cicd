@@ -2,12 +2,14 @@ name: CI-CD Spring Boot to Rancher Desktop
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    tags:
+      - "*"   # Runs only when a tag is pushed (recommended)
+    branches:
+      - main  # optional — remove this if you want ONLY tag builds
 
 env:
-  IMAGE_TAG: ${{ github.sha }}
-
+  IMAGE_TAG: ${{ github.ref_name }}   # <---- GitHub Tag (v1.0.3)
+  
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -48,7 +50,7 @@ jobs:
     needs: build-test
 
     env:
-      IMAGE_TAG: ${{ github.sha }}
+      IMAGE_TAG: ${{ github.ref_name }}
       KUBECONFIG_PATH: ~/.kube/config
 
     steps:
