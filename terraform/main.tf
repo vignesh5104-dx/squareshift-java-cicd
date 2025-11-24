@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "app_ns" {
 resource "helm_release" "springboot_app" {
   name       = "springboot-app"
   namespace  = kubernetes_namespace.app_ns.metadata[0].name
-  chart      = "../helm/springboot-app"
+  chart      = "../helm"
   version    = "0.1.0"
   create_namespace = false
 
