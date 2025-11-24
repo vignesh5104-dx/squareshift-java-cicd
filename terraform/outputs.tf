@@ -1,8 +1,7 @@
 output "namespace" {
-  value = kubernetes_namespace.app_ns.metadata[0].name
+  value = helm_release.springboot_app.namespace
 }
 
 output "release_name" {
   value = helm_release.springboot_app.name
 }
-
