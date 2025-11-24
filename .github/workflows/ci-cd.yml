@@ -62,9 +62,9 @@ jobs:
           echo "repo=$USERNAME/springboot-app" >> $GITHUB_OUTPUT
 
       - name: Cleanup existing Helm release
-      run: |
-        helm uninstall springboot-app -n springboot-app || true
-        kubectl delete namespace springboot-app --ignore-not-found=true
+        run: |
+          helm uninstall springboot-app -n springboot-app || true
+          kubectl delete namespace springboot-app --ignore-not-found=true
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
