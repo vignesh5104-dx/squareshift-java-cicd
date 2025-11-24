@@ -1,10 +1,5 @@
-resource "kubernetes_namespace" "app" {
-  metadata {
-    name = var.namespace
-  }
-  lifecycle {
-    ignore_changes = [
-      metadata
-    ]
+resource "null_resource" "namespace" {
+  provisioner "local-exec" {
+    command = "kubectl create namespace ${var.namespace} --dry-run=client -oyaml | kubectl apply -f -"
   }
 }
