@@ -1,24 +1,11 @@
-variable "kubeconfig" {
-  description = "Path to kubeconfig file for Rancher Desktop"
-  type        = string
-  default     = "~/.kube/config"
-}
-
 variable "namespace" {
-  description = "Namespace for the Spring Boot app"
+  description = "Namespace where the app will run"
   type        = string
   default     = "springboot-app"
 }
 
-variable "image_repository" {
-  description = "Container image repository"
+variable "kubeconfig" {
+  description = "Path to kubeconfig file"
   type        = string
-  default     = "your-docker-username/springboot-app"
+  default     = "~/.kube/config"
 }
-
-variable "image_tag" {
-  description = "Container image tag"
-  type        = string
-  default     = "latest"
-}
-

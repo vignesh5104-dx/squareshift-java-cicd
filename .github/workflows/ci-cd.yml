@@ -61,11 +61,7 @@ jobs:
           USERNAME=$(echo "${{ secrets.DOCKER_HUB_USERNAME }}" | tr '[:upper:]' '[:lower:]')
           echo "repo=$USERNAME/springboot-app" >> $GITHUB_OUTPUT
 
-      - name: Cleanup existing Helm release
-        run: |
-          helm uninstall springboot-app -n springboot-app || true
-          kubectl delete namespace springboot-app --ignore-not-found=true
-
+      # --- TERRAFORM PART ---
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -77,8 +73,13 @@ jobs:
 
       - name: Terraform apply
         working-directory: terraform
-        env:
-          TF_VAR_kubeconfig: ${{ env.KUBECONFIG_PATH }}
-          TF_VAR_image_repository: ${{ steps.repo.outputs.repo }}
-          TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
         run: terraform apply -auto-approve
+
+      # --- HELM DEPLOYMENT (SEPARATE FROM TERRAFORM) ---
+      - name: Deploy Helm Chart
+        run: |
+          helm upgrade --install springboot-app ./helm \
+            --namespace springboot-app \
+            --create-namespace \
+            --set image.repository=${{ steps.repo.outputs.repo }} \
+            --set image.tag=${{ env.IMAGE_TAG }}
