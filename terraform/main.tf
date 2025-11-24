@@ -1,14 +1,17 @@
 resource "helm_release" "springboot_app" {
   name       = "springboot-app"
   namespace  = var.namespace
-  create_namespace = true
-
   chart      = "../helm"
   version    = "0.1.0"
 
-  force_update = true     # <---- important
-  cleanup_on_fail = true  # <---- auto fixes failed states
-  atomic = true           # <---- safe upgrades
+  create_namespace = true
+
+  atomic = false
+  wait = false
+  timeout = "600s"
+
+  force_update = true
+  cleanup_on_fail = true
 
   set {
     name  = "image.repository"
