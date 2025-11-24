@@ -1,33 +1,46 @@
-# === Build stage ===
+# ===== Build Stage ====== #
+
 FROM maven:3.9.9-eclipse-temurin-17 AS builder
 
-WORKDIR /app
 
-# Cache dependencies
+# 1. Copy only pom.xml first to cache dependencies
 COPY pom.xml .
+
+# Download dependencies (cached if pom.xml unchanged)
 RUN mvn -B dependency:go-offline
 
-# Build application
+# 2. Copy source code
 COPY src ./src
+
+# Build the application (fat jar)
 RUN mvn -B clean package -DskipTests
 
-# === Run stage ===
-FROM eclipse-temurin:17-jre-alpine
 
+# ===== Run Stage ======== #
+
+FROM eclipse-temurin:17-jre
+
+# Set working directory
 WORKDIR /app
 
-# Create non-root user
+# Create a non-root user (best practice)
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring
 
-# Copy the fat jar from builder
-COPY --from=builder /app/target/*.jar app.jar
+# Copy built jar from builder stage
+COPY --from=builder /app/target/*-SNAPSHOT.jar app.jar
 
-# Expose HTTP port
+# Expose port
 EXPOSE 8080
 
-# Health check (uses actuator)
+# JVM Optimizations for container environments
+ENV JAVA_OPTS="-XX:+UseG1GC -XX:+UseStringDeduplication \
+               -XX:+ExitOnOutOfMemoryError \
+               -Xms256m -Xmx512m"
+
+# Optional health check (Spring Boot actuator)
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD wget -qO- http://localhost:8080/actuator/health || exit 1
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the app
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
