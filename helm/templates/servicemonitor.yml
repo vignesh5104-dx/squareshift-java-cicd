@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-monitor
   namespace: monitoring
   labels:
-    release: prometheus  # IMPORTANT → must match your Prometheus instance
+    release: monitoring  # IMPORTANT → must match your Prometheus instance
 spec:
   namespaceSelector:
     matchNames:
